@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.service;
 
+import com.sprint.mission.discodeit.dto.UserUpdateDto;
 import com.sprint.mission.discodeit.entity.User;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public interface UserService {
     void save(User user);
     User findById(UUID id);
     List<User> findAll();
-    User update(User user);
+    User update(UserUpdateDto dto);
     User delete(UUID id);
 
 }

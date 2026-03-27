@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.service.jcf;
 
+import com.sprint.mission.discodeit.dto.UserUpdateDto;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.UserService;
 
@@ -36,22 +37,15 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public User update(User user) {
-
-        if (data.contains(user)) {
-            user.update("이영양", "yungyang@codeit.com", "1234", "yungyang");
-            return user;
-        }
-        throw new RuntimeException("User update 해당 id가 없습니다.");
+    public User update(UserUpdateDto userupdatedto) {
+        User user = findById(userupdatedto.id());
+        user.update(userupdatedto.username(), userupdatedto.email(), userupdatedto.password(), userupdatedto.nickname());
+        return user;
     }
 
     @Override
     public User delete(UUID id) {
         User user = findById(id);
-
-        if (user == null) {
-            throw new RuntimeException("User delete 해당 id가 없습니다.");
-        }
 
         data.removeIf(u -> u.getId().equals(id));
         return user;

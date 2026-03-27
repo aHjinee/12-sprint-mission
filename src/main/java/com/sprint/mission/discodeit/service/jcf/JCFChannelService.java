@@ -1,7 +1,9 @@
 package com.sprint.mission.discodeit.service.jcf;
 
+import com.sprint.mission.discodeit.dto.ChannelUpdateDto;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
+import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.ChannelService;
 
 
@@ -29,13 +31,10 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public Channel update(Channel channel) {
-
-        if (data.containsKey(channel.getId())) {
-            channel.update("채널3", "채널 1을 3으로 변경", ChannelType.FORUM, true);
-            return channel;
-        }
-        return null;
+    public Channel update(ChannelUpdateDto dto) {
+        Channel channel = findById(dto.id());
+        channel.update(dto.channelName(), dto.channelDescription(), dto.type(), dto.isPrivate());
+        return channel;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.sprint.mission.discodeit;
 
+import com.sprint.mission.discodeit.dto.ChannelUpdateDto;
+import com.sprint.mission.discodeit.dto.UserUpdateDto;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.entity.User;
@@ -10,6 +12,7 @@ import com.sprint.mission.discodeit.service.jcf.JCFUserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class JavaApplication {
     public static void main(String[] args) {
@@ -40,7 +43,10 @@ public class JavaApplication {
         System.out.println("\n------------------------ [ user 정보 수정 ] -----------------------");
         System.out.println("user1 수정 전 : " + userinfo);
 
-        User userUpdateInfo = userService.update(userinfo);
+        UUID userId = userinfo.getId();
+        UserUpdateDto UserUpdateDto = new UserUpdateDto(userId, "홍중동", "yungyang@codeit.com", "1234", "yungyang");
+
+        User userUpdateInfo = userService.update(UserUpdateDto);
         System.out.println("user1 수정 후 : " + userUpdateInfo);
 
         System.out.println("\n------------------------ [ user 삭제 ] ---------------------------");
@@ -67,8 +73,10 @@ public class JavaApplication {
         System.out.println(channel1Info);
 
         System.out.println("\n------------------------ [ Channel 정보 수정 ] -----------------------");
-
-        Channel channel1Update = channelservice.update(channel1Info);
+        UUID channel1InfoId = channel1Info.getId();
+        ChannelUpdateDto ChannelUpdateDto
+                = new ChannelUpdateDto(channel1InfoId, "채널3", "채널 1을 3으로 변경", ChannelType.FORUM, true);
+        Channel channel1Update = channelservice.update(ChannelUpdateDto);
         System.out.println(channel1Update);
 
         System.out.println("\n------------------------ [ Channel 삭제 ] -----------------------");
