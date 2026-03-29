@@ -37,9 +37,9 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public User update(UserUpdateDto userupdatedto) {
-        User user = findById(userupdatedto.id());
-        user.update(userupdatedto.username(), userupdatedto.email(), userupdatedto.password(), userupdatedto.nickname());
+    public User update(UserUpdateDto dto) {
+        User user = findById(dto.id());
+        user.update(dto.username(), dto.email(), dto.password(), dto.nickname());
         return user;
     }
 

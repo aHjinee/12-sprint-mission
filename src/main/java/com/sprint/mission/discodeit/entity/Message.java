@@ -4,16 +4,16 @@ import java.util.UUID;
 
 public class Message {
     private UUID id;
-    String roomId;
-    String senderId;
+    private UUID roomId;
+    private UUID senderId;
     private String content;
     private Long createdAt;
     private Long updatedAt;
 
-    public Message(String roomId, String senderId, String content) {
+    public Message(UUID senderId,UUID roomId, String content) {
         id = UUID.randomUUID();
-        this.roomId = roomId;
         this.senderId = senderId;
+        this.roomId = roomId;
         this.content = content;
         createdAt = System.currentTimeMillis();
         updatedAt = System.currentTimeMillis();
@@ -23,11 +23,11 @@ public class Message {
         return id;
     }
 
-    public String getRoomId() {
+    public UUID getRoomId() {
         return roomId;
     }
 
-    public String getSenderId() {
+    public UUID getSenderId() {
         return senderId;
     }
 
