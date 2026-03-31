@@ -20,7 +20,7 @@ public class JCFMessageService implements MessageService {
                 .anyMatch(msg -> msg.getId().equals(message.getId()));
 
         if (isAlreadyExists) {
-            System.out.println("이미 존재하는 ID입니다.");
+            System.out.println("이미 존재하는 Id입니다.");
         } else {
             data.add(message);
         }
@@ -45,7 +45,7 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public Message update(MessageUpdateDto dto) {
+    public Message update(MessageUpdateDto dto) { //dto에서 MessageId랑 내용만 받는 게 좋을까
         Message message = findById(dto.id())
                 .orElseThrow(() -> new IllegalArgumentException("메시지를 찾을 수 없습니다."));
         message.update(dto.content());

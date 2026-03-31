@@ -10,11 +10,15 @@ import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
+import com.sprint.mission.discodeit.service.file.FileChannelService;
+import com.sprint.mission.discodeit.service.file.FileMessageService;
+import com.sprint.mission.discodeit.service.file.FileUserService;
 import com.sprint.mission.discodeit.service.jcf.JCFChannelService;
 import com.sprint.mission.discodeit.service.jcf.JCFMessageService;
 import com.sprint.mission.discodeit.service.jcf.JCFUserService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class JavaApplication {
@@ -135,6 +139,86 @@ public class JavaApplication {
         Message deleteMsg = messageService.delete(message1.getId());
         System.out.println("삭제 된 msg : " + deleteMsg);
         System.out.println(messageService.findById(message1.getId()));
+
+        System.out.println("\n-------------------------- [ FileUser ] ------------------------");
+
+        FileUserService fileUserService = new FileUserService();
+        User userFile1 = new User("홍길동", "dongdong@codeit.com", "1234", "dongdong");
+        User userFile2 = new User("김길동", "dongdong@codeit.com", "1234", "dongdong");
+        User userFile3 = new User("영길동", "dongdong@codeit.com", "1234", "dongdong");
+
+        fileUserService.save(userFile1);
+        fileUserService.save(userFile2);
+        fileUserService.save(userFile3);
+
+        System.out.println("-------------------------- [ 저장 및 단건 조회 ] --------------------------");
+        User foundUser = fileUserService.findById(userFile1.getId());
+        System.out.println(foundUser);
+        System.out.println("-------------------------- [ 전체 조회 ] --------------------------");
+        List<User> allUsers = fileUserService.findAll();
+        allUsers.forEach(System.out::println);
+        System.out.println("전체 개수 : " + fileUserService.findAll().size());
+
+        System.out.println("-------------------------- [ 단건 삭제 ] --------------------------");
+        fileUserService.delete(userFile1.getId());
+        System.out.println("단건 삭제 후 개수 : " + fileUserService.findAll().size());
+
+        System.out.println("-------------------------- [ 전체 삭제 ] --------------------------");
+        fileUserService.deleteAll();
+        System.out.println("전체 삭제 후 개수 : " + fileUserService.findAll().size());
+
+        System.out.println("\n-------------------------- [ File Channel ] ------------------------");
+
+        FileChannelService fileChannelService = new FileChannelService();
+        Channel channelFile1 = new Channel("채널1", "첫 번째 채널", ChannelType.TEXT, false);
+        Channel channelFile2 = new Channel("채널2", "두 번째 채널", ChannelType.VOICE, true);
+
+        fileChannelService.save(channelFile1);
+        fileChannelService.save(channelFile2);
+        System.out.println("-------------------------- [ channel 저장 및 단건 조회 ] --------------------------");
+        Channel foundChannel = fileChannelService.findById(channelFile1.getId());
+        System.out.println(foundChannel);
+        System.out.println("-------------------------- [ channel 전체 조회 ] --------------------------");
+        List<Channel> allChannels = fileChannelService.findAll();
+        allChannels.forEach(System.out::println);
+        System.out.println("전체 개수 : " + fileChannelService.findAll().size());
+
+        System.out.println("-------------------------- [ channel 단건 삭제 ] --------------------------");
+        fileChannelService.delete(channelFile1.getId());
+        System.out.println("단건 삭제 후 개수 : " + fileChannelService.findAll().size());
+
+        System.out.println("-------------------------- [ channel 전체 삭제 ] --------------------------");
+        fileChannelService.deleteAll();
+        System.out.println("전체 삭제 후 개수 : " + fileChannelService.findAll().size());
+
+        System.out.println("\n-------------------------- [ File Message ] ------------------------");
+        FileMessageService fileMessageService = new FileMessageService();
+
+        Message messageFile1 = new Message(sender1.getId(), roomId1, "내용1");
+        Message messageFile2 = new Message(sender1.getId(), roomId2, "내용2");
+        Message messageFile3 = new Message(sender1.getId(), roomId1, "내용3");
+        Message messageFile4 = new Message(sender1.getId(), roomId2, "내용4");
+
+        fileMessageService.save(messageFile1);
+        fileMessageService.save(messageFile2);
+        fileMessageService.save(messageFile3);
+        fileMessageService.save(messageFile4);
+
+        System.out.println("-------------------------- [ Message 저장 및 단건 조회 ] --------------------------");
+        Optional<Message> foundMessage = fileMessageService.findById(messageFile1.getId());
+        System.out.println(foundMessage);
+        System.out.println("-------------------------- [ Message 전체 조회 ] --------------------------");
+        List<Message> allMessages = fileMessageService.findAll();
+        allMessages.forEach(System.out::println);
+        System.out.println("전체 개수 : " + fileMessageService.findAll().size());
+
+        System.out.println("-------------------------- [ Message 단건 삭제 ] --------------------------");
+        fileMessageService.delete(messageFile1.getId());
+        System.out.println("단건 삭제 후 개수 : " + fileMessageService.findAll().size());
+
+        System.out.println("-------------------------- [ Message 전체 삭제 ] --------------------------");
+        fileMessageService.deleteAll();
+        System.out.println("전체 삭제 후 개수 : " + fileMessageService.findAll().size());
 
     }
 }
