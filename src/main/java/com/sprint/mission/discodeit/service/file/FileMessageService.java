@@ -29,25 +29,19 @@ public class FileMessageService implements MessageService {
 
 
     @Override
-    public void save(Message message) {
+    public Message create(String content, UUID channelId, UUID authorId) {
+        Message message = new Message(content, channelId, authorId);
         Path path = makePath(message.getId());
         boolean result = FileUtils.saveObject(path, message);
         if(!result){
             throw new IllegalStateException("message 저장에 실패했습니다.");
         }
+        return message;
     }
 
-    @Override
-    public Optional<Message> findById(UUID id) {
-        return Optional.ofNullable(FileUtils.loadObject(makePath(id)))
-                .filter(obj -> obj instanceof Message)
-                .map(obj -> (Message) obj);
-    }
-
-    @Override
-    public List<Message> findBySenderIdAndRoomId(UUID senderId, UUID roomId) {
-        //load쓰지 말고 loadObject로 가져와서 스트림으로 ...?
-        return List.of();
+     @Override
+    public Message find(UUID messageId) {
+         return (Message)FileUtils.loadObject(makePath(messageId));
     }
 
     @Override
@@ -55,18 +49,20 @@ public class FileMessageService implements MessageService {
         return FileUtils.load(DIRECTORY);
     }
 
+    @Override
+    public Message update(UUID messageId, String newContent) {
+        return null;
+    }
+
 
     @Override
-    public Message delete(UUID id) {
-        Message MessageToDelete = findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 id입니다."));
+    public void delete(UUID id) {
         Path path = makePath(id);
         if(!Files.exists(path)){
             throw new RuntimeException("삭제 실패: 해당 " + id + "의 파일을 찾을 수 없습니다.");
         }
         try {
             Files.delete(path);
-            return MessageToDelete;
         } catch (IOException e) {
             throw new RuntimeException("파일을 삭제할 수 없습니다.");
         }
@@ -87,9 +83,4 @@ public class FileMessageService implements MessageService {
         }
     }
 
-    @Override
-    public Message update(MessageUpdateDto dto) {
-        //save를 할지.. UserService에서 뺄지..?
-        return null;
-    }
 }

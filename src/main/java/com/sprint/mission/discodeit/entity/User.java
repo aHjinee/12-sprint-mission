@@ -1,33 +1,37 @@
 package com.sprint.mission.discodeit.entity;
 
-import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
 public class User implements Serializable {
-    @Serial
     private static final long serialVersionUID = 1L;
 
     private UUID id;
-    private String username;
-    private String email;
-    private transient String password;
-    private String nickname;
     private Long createdAt;
     private Long updatedAt;
+    private String username;
+    private String email;
+    private String password;
 
-    public User(String username, String email, String password, String nickname) {
-        id = UUID.randomUUID();
+    public User(String username, String email, String password) {
+        this.id = UUID.randomUUID();
+        this.createdAt = Instant.now().getEpochSecond();
         this.username = username;
         this.email = email;
         this.password = password;
-        this.nickname = nickname;
-        createdAt = System.currentTimeMillis();
-        updatedAt = System.currentTimeMillis();
     }
 
     public UUID getId() {
         return id;
+    }
+
+    public Long getCreatedAt() {
+        return createdAt;
+    }
+
+    public Long getUpdatedAt() {
+        return updatedAt;
     }
 
     public String getUsername() {
@@ -42,37 +46,23 @@ public class User implements Serializable {
         return password;
     }
 
-    public String getNickname() {
-        return nickname;
-    }
+    public void update(String newUsername, String newEmail, String newPassword) {
+        boolean anyValueUpdated = false;
+        if (newUsername != null && !newUsername.equals(this.username)) {
+            this.username = newUsername;
+            anyValueUpdated = true;
+        }
+        if (newEmail != null && !newEmail.equals(this.email)) {
+            this.email = newEmail;
+            anyValueUpdated = true;
+        }
+        if (newPassword != null && !newPassword.equals(this.password)) {
+            this.password = newPassword;
+            anyValueUpdated = true;
+        }
 
-    public Long getCreatedAt() {
-        return createdAt;
-    }
-
-    public Long getUpdatedAt() {
-        return updatedAt;
-    }
-
-
-    public void update(String username, String email, String password, String nickname){
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-        updatedAt = System.currentTimeMillis();
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now().getEpochSecond();
+        }
     }
 }

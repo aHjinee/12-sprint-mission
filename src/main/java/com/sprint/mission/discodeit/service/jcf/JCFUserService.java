@@ -17,12 +17,14 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public void save(User user) {
+    public User create(String username, String email, String password) {
+        User user = new User(username, email, password);
         data.add(user);
+        return user;
     }
 
     @Override
-    public User findById(UUID id) {
+    public User find(UUID id) {
         for (User user : data) {
             if (user.getId().equals(id)) {
                 return user;
@@ -37,17 +39,15 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public User update(UserUpdateDto dto) {
-        User user = findById(dto.id());
-        user.update(dto.username(), dto.email(), dto.password(), dto.nickname());
+    public User update(UUID userId, String newUsername, String newEmail, String newPassword) {
+        User user = find(userId);
+        user.update(newUsername, newEmail, newPassword);
         return user;
     }
 
     @Override
-    public User delete(UUID id) {
-        User user = findById(id);
-
+    public void delete(UUID id) {
+        User user = find(id);
         data.removeIf(u -> u.getId().equals(id));
-        return user;
     }
 }

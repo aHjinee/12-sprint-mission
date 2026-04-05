@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.service.jcf;
 
 import com.sprint.mission.discodeit.dto.ChannelUpdateDto;
 import com.sprint.mission.discodeit.entity.Channel;
+import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.service.ChannelService;
 
 
@@ -15,12 +16,14 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public void save(Channel channel) {
-        data.put(channel.getId(), channel);
+    public Channel create(ChannelType type, String name, String description) {
+        Channel channel = new Channel(type, name, description);
+        return data.put(channel.getId(), channel);
     }
 
-    public Channel findById(UUID id) {
-        return data.get(id);
+    @Override
+    public Channel find(UUID channelId) {
+        return data.get(channelId);
     }
 
     @Override
@@ -29,14 +32,14 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public Channel update(ChannelUpdateDto dto) {
-        Channel channel = findById(dto.id());
-        channel.update(dto.channelName(), dto.channelDescription(), dto.type(), dto.isPrivate());
+    public Channel update(UUID channelId, String newName, String newDescription) {
+        Channel channel = find(channelId);
+        channel.update(newName, newDescription);
         return channel;
     }
 
     @Override
-    public Channel delete(UUID id) {
-        return data.remove(id);
+    public void delete(UUID id) {
+        data.remove(id);
     }
 }

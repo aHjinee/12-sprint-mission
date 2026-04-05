@@ -15,7 +15,8 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public void save(Message message) {
+    public Message create(String content, UUID channelId, UUID authorId) {
+        Message message = new Message(content, channelId, authorId);
         boolean isAlreadyExists = data.stream()
                 .anyMatch(msg -> msg.getId().equals(message.getId()));
 
@@ -24,18 +25,12 @@ public class JCFMessageService implements MessageService {
         } else {
             data.add(message);
         }
+        return message;
     }
 
     @Override
-    public Optional<Message> findById(UUID id) {
-        return data.stream().filter(msg -> msg.getId().equals(id)).findAny();
-    }
-
-    @Override
-    public List<Message> findBySenderIdAndRoomId(UUID senderId, UUID roomId) {
-        return data.stream().filter(
-                msg ->msg.getSenderId().equals(senderId) && msg.getRoomId().equals(roomId))
-                .collect(Collectors.toList());
+    public Message find(UUID messageId) {
+        return (Message) data.stream().filter(msg -> msg.getId().equals(messageId));
     }
 
     @Override
@@ -45,18 +40,15 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public Message update(MessageUpdateDto dto) { //dto에서 MessageId랑 내용만 받는 게 좋을까
-        Message message = findById(dto.id())
-                .orElseThrow(() -> new IllegalArgumentException("메시지를 찾을 수 없습니다."));
-        message.update(dto.content());
+    public Message update(UUID messageId, String newContent) {
+        Message message = find(messageId);
+        message.update(newContent);
         return message;
     }
 
     @Override
-    public Message delete(UUID id) {
-        Message message = findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("메시지를 찾을 수 없습니다."));
+    public void delete(UUID id) {
+        Message message = find(id);
         data.removeIf(m -> m.getId().equals(id));
-        return message;
     }
 }

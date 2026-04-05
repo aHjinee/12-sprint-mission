@@ -1,43 +1,29 @@
 package com.sprint.mission.discodeit.entity;
 
-import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
 public class Message implements Serializable {
-    @Serial
     private static final long serialVersionUID = 1L;
 
     private UUID id;
-    private UUID roomId;
-    private UUID senderId;
-    private String content;
     private Long createdAt;
     private Long updatedAt;
+    private String content;
+    private UUID channelId;
+    private UUID authorId;
 
-    public Message(UUID senderId,UUID roomId, String content) {
-        id = UUID.randomUUID();
-        this.senderId = senderId;
-        this.roomId = roomId;
+    public Message(String content, UUID channelId, UUID authorId) {
+        this.id = UUID.randomUUID();
+        this.createdAt = Instant.now().getEpochSecond();
         this.content = content;
-        createdAt = System.currentTimeMillis();
-        updatedAt = System.currentTimeMillis();
+        this.channelId = channelId;
+        this.authorId = authorId;
     }
 
     public UUID getId() {
         return id;
-    }
-
-    public UUID getRoomId() {
-        return roomId;
-    }
-
-    public UUID getSenderId() {
-        return senderId;
-    }
-
-    public String getContent() {
-        return content;
     }
 
     public Long getCreatedAt() {
@@ -48,20 +34,27 @@ public class Message implements Serializable {
         return updatedAt;
     }
 
-    public void update(String content){
-        this.content = content;
-        updatedAt = System.currentTimeMillis();
+    public String getContent() {
+        return content;
     }
 
-    @Override
-    public String toString() {
-        return "Message{" +
-                "id=" + id +
-                ", roomId='" + roomId + '\'' +
-                ", senderId='" + senderId + '\'' +
-                ", content='" + content + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
+    public UUID getChannelId() {
+        return channelId;
+    }
+
+    public UUID getAuthorId() {
+        return authorId;
+    }
+
+    public void update(String newContent) {
+        boolean anyValueUpdated = false;
+        if (newContent != null && !newContent.equals(this.content)) {
+            this.content = newContent;
+            anyValueUpdated = true;
+        }
+
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now().getEpochSecond();
+        }
     }
 }

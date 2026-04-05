@@ -1,47 +1,29 @@
 package com.sprint.mission.discodeit.entity;
 
-import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
 public class Channel implements Serializable {
-    @Serial
     private static final long serialVersionUID = 1L;
-
     private UUID id;
-    private String channelName;
-    private String channelDescription;
-    private ChannelType type;
-    private boolean isPrivate;
     private Long createdAt;
     private Long updatedAt;
 
-    public Channel(String channelName, String channelDescription, ChannelType type, boolean isPrivate) {
-        id = UUID.randomUUID();
-        this.channelName = channelName;
-        this.channelDescription = channelDescription;
+    private ChannelType type;
+    private String name;
+    private String description;
+
+    public Channel(ChannelType type, String name, String description) {
+        this.id = UUID.randomUUID();
+        this.createdAt = Instant.now().getEpochSecond();
         this.type = type;
-        this.isPrivate = isPrivate;
-        createdAt = System.currentTimeMillis();
-        updatedAt = System.currentTimeMillis();
+        this.name = name;
+        this.description = description;
     }
 
     public UUID getId() {
         return id;
-    }
-
-    public String getChannelName() {
-        return channelName;
-    }
-
-    public String getChannelDescription() {
-        return channelDescription;
-    }
-
-    public ChannelType getType() { return type; }
-
-    public boolean isPrivate() {
-        return isPrivate;
     }
 
     public Long getCreatedAt() {
@@ -52,24 +34,31 @@ public class Channel implements Serializable {
         return updatedAt;
     }
 
-    public void update(String channelName, String channelDescription, ChannelType type, boolean isPrivate){
-        this.channelName = channelName;
-        this.channelDescription = channelDescription;
-        this.type = type;
-        this.isPrivate = isPrivate;
-        updatedAt = System.currentTimeMillis();
+    public ChannelType getType() {
+        return type;
     }
 
-    @Override
-    public String toString() {
-        return "Channel{" +
-                "id=" + id +
-                ", channelName='" + channelName + '\'' +
-                ", channelDescription='" + channelDescription + '\'' +
-                ", type=" + type +
-                ", isPrivate=" + isPrivate +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void update(String newName, String newDescription) {
+        boolean anyValueUpdated = false;
+        if (newName != null && !newName.equals(this.name)) {
+            this.name = newName;
+            anyValueUpdated = true;
+        }
+        if (newDescription != null && !newDescription.equals(this.description)) {
+            this.description = newDescription;
+            anyValueUpdated = true;
+        }
+
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now().getEpochSecond();
+        }
     }
 }

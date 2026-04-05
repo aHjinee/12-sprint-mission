@@ -3,6 +3,7 @@ package com.sprint.mission.discodeit.service.file;
 import com.sprint.mission.discodeit.common.FileUtils;
 import com.sprint.mission.discodeit.dto.ChannelUpdateDto;
 import com.sprint.mission.discodeit.entity.Channel;
+import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.service.ChannelService;
 
 import java.io.IOException;
@@ -27,17 +28,19 @@ public class FileChannelService implements ChannelService {
 
 
     @Override
-    public void save(Channel Channel) {
+    public Channel create(ChannelType type, String name, String description) {
+        Channel Channel = new Channel(type, name, description);
         Path path = makePath(Channel.getId());
         boolean result = FileUtils.saveObject(path, Channel);
         if(!result){
             throw new IllegalStateException("채널 저장에 실패했습니다.");
         }
+        return Channel;
     }
 
     @Override
-    public Channel findById(UUID id) {
-        return (Channel)FileUtils.loadObject(makePath(id));
+    public Channel find(UUID channelId) {
+        return (Channel)FileUtils.loadObject(makePath(channelId));
     }
 
     @Override
@@ -45,17 +48,20 @@ public class FileChannelService implements ChannelService {
         return FileUtils.load(DIRECTORY);
     }
 
+    @Override
+    public Channel update(UUID channelId, String newName, String newDescription) {
+        return null;
+    }
+
 
     @Override
-    public Channel delete(UUID id) {
-        Channel channelToDelete = findById(id);
+    public void delete(UUID id) {
         Path path = makePath(id);
         if(!Files.exists(path)){
             throw new RuntimeException("삭제 실패: 해당 " + id + "의 파일을 찾을 수 없습니다.");
         }
         try {
             Files.delete(path);
-            return channelToDelete;
         } catch (IOException e) {
             throw new RuntimeException("파일을 삭제할 수 없습니다.");
         }
@@ -76,9 +82,4 @@ public class FileChannelService implements ChannelService {
         }
     }
 
-    @Override
-    public Channel update(ChannelUpdateDto dto) {
-        //save를 할지.. UserService에서 뺄지..?
-        return null;
-    }
 }

@@ -27,17 +27,19 @@ public class FileUserService implements UserService {
 
 
     @Override
-    public void save(User user) {
+    public User create(String username, String email, String password) {
+        User user = new User(username, email, password);
         Path path = makePath(user.getId());
         boolean result = FileUtils.saveObject(path, user);
         if(!result){
             throw new IllegalStateException("유저 저장에 실패했습니다.");
         }
+        return user;
     }
 
     @Override
-    public User findById(UUID id) {
-        return (User)FileUtils.loadObject(makePath(id));
+    public User find(UUID userId) {
+        return (User)FileUtils.loadObject(makePath(userId));
     }
 
     @Override
@@ -46,15 +48,18 @@ public class FileUserService implements UserService {
     }
 
     @Override
-    public User delete(UUID id) {
-        User userToDelete = findById(id);
+    public User update(UUID userId, String newUsername, String newEmail, String newPassword) {
+        return null;
+    }
+
+    @Override
+    public void delete(UUID id) {
         Path path = makePath(id);
         if(!Files.exists(path)){
             throw new RuntimeException("삭제 실패: 해당 " + id + "의 파일을 찾을 수 없습니다.");
         }
         try {
             Files.delete(path);
-            return userToDelete;
         } catch (IOException e) {
             throw new RuntimeException("파일을 삭제할 수 없습니다.");
         }
@@ -75,9 +80,4 @@ public class FileUserService implements UserService {
         }
     }
 
-    @Override
-    public User update(UserUpdateDto dto) {
-        //save를 할지.. UserService에서 뺄지..?
-        return null;
-    }
 }
