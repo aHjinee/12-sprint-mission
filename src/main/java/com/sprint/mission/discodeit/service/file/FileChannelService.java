@@ -29,13 +29,13 @@ public class FileChannelService implements ChannelService {
 
     @Override
     public Channel create(ChannelType type, String name, String description) {
-        Channel Channel = new Channel(type, name, description);
-        Path path = makePath(Channel.getId());
-        boolean result = FileUtils.saveObject(path, Channel);
+        Channel channel = new Channel(type, name, description);
+        Path path = makePath(channel.getId());
+        boolean result = FileUtils.saveObject(path, channel);
         if(!result){
             throw new IllegalStateException("채널 저장에 실패했습니다.");
         }
-        return Channel;
+        return channel;
     }
 
     @Override

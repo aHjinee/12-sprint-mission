@@ -34,7 +34,7 @@ public class FileUtils {
 
     public static Object loadObject(Path path) {
         if (!Files.exists(path)) {
-            throw new RuntimeException("존재하지 않음");
+            return null;
         }
         try (FileInputStream fis = new FileInputStream(path.toFile());
              ObjectInputStream ois = new ObjectInputStream(fis)) {
