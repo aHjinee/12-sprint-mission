@@ -8,32 +8,22 @@ import java.util.UUID;
 
 @Getter
 public class BinaryContent implements Serializable {
-
     private static final long serialVersionUID = 1L;
-    private final UUID id;
-    private final Instant createdAt;
-    private final UUID authorId;
-    private final UUID messageId;
-    private final UUID userId;
-    private final byte[] imageContent;
+    private UUID id;
+    private Instant createdAt;
+    //
+    private String fileName;
+    private Long size;
+    private String contentType;
+    private byte[] bytes;
 
-    public BinaryContent(UUID userId, UUID authorId, UUID messageId, byte[] imageContent) {
+    public BinaryContent(String fileName, Long size, String contentType, byte[] bytes) {
         this.id = UUID.randomUUID();
         this.createdAt = Instant.now();
-        this.userId = userId;
-        this.authorId = authorId;
-        this.messageId = messageId;
-        this.imageContent = imageContent;
-
+        //
+        this.fileName = fileName;
+        this.size = size;
+        this.contentType = contentType;
+        this.bytes = bytes;
     }
-
-    public static BinaryContent createProfileImage(UUID userId, byte[] imageContent) {
-        return new BinaryContent(userId, null, null, imageContent);
-    }
-
-    public static BinaryContent createMessageImage(UUID authorId, UUID messageId, byte[] imageContent) {
-        return new BinaryContent(null, authorId, messageId, imageContent);
-    }
-
-
 }

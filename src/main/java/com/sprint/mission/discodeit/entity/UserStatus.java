@@ -1,47 +1,45 @@
 package com.sprint.mission.discodeit.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
 public class UserStatus implements Serializable {
     private static final long serialVersionUID = 1L;
     private UUID id;
-    private UUID userId;
     private Instant createdAt;
     private Instant updatedAt;
-    private LocalDateTime lastConnectedAt;
+    //
+    private UUID userId;
+    private Instant lastActiveAt;
 
-    public UserStatus(UUID userId) {
+    public UserStatus(UUID userId, Instant lastActiveAt) {
         this.id = UUID.randomUUID();
-        this.userId = userId;
         this.createdAt = Instant.now();
-        this.updatedAt = Instant.now();
-        this.lastConnectedAt = LocalDateTime.now();
+        //
+        this.userId = userId;
+        this.lastActiveAt = lastActiveAt;
     }
 
-    public boolean isOnline() {
-        if(this.lastConnectedAt == null){
-            return false;
+    public void update(Instant lastActiveAt) {
+        boolean anyValueUpdated = false;
+        if (lastActiveAt != null && !lastActiveAt.equals(this.lastActiveAt)) {
+            this.lastActiveAt = lastActiveAt;
+            anyValueUpdated = true;
         }
 
-        LocalDateTime fiveMinutesAgo = LocalDateTime.now().minusMinutes(5);
-        return this.lastConnectedAt.isAfter(fiveMinutesAgo);
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now();
+        }
     }
 
-    public void updateConnection(LocalDateTime lastConnectedAt) {
-        if (lastConnectedAt == null) {
-            throw new IllegalArgumentException("수정할 접속 시각 데이터가 없습니다");
-        }
-        this.lastConnectedAt = lastConnectedAt;
-        this.updatedAt = Instant.now();
+    public Boolean isOnline() {
+        Instant instantFiveMinutesAgo = Instant.now().minus(Duration.ofMinutes(5));
+
+        return lastActiveAt.isAfter(instantFiveMinutesAgo);
     }
 }

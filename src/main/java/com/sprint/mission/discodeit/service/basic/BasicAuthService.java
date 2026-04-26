@@ -1,34 +1,32 @@
 package com.sprint.mission.discodeit.service.basic;
 
-import com.sprint.mission.discodeit.dto.login.LoginRequestDto;
-import com.sprint.mission.discodeit.dto.login.LoginResponseDto;
+import com.sprint.mission.discodeit.dto.request.LoginRequest;
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.exception.UserNotFoundException;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.AuthService;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
 
+@RequiredArgsConstructor
 @Service
 public class BasicAuthService implements AuthService {
     private final UserRepository userRepository;
 
-    public BasicAuthService(
-            @Qualifier("jCFUserRepository") UserRepository userRepository
-    ) {
-        this.userRepository = userRepository;
-    }
+    @Override
+    public User login(LoginRequest loginRequest) {
+        String username = loginRequest.username();
+        String password = loginRequest.password();
 
-    public LoginResponseDto login(LoginRequestDto dto) {
-        User user = userRepository.findByUsername(dto.username())
-                .orElseThrow(()->new NoSuchElementException("존재하지 않는 사용자입니다. username : " + dto.username()));
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User with username " + username + " not found"));
 
-        if (!user.getPassword().equals(dto.password())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        if (!user.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Wrong password");
         }
 
-        return new LoginResponseDto(user.getId(), user.getUsername(), user.getEmail());
-
+        return user;
     }
 }

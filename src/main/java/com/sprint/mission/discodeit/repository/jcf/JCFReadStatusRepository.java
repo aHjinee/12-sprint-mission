@@ -2,12 +2,13 @@ package com.sprint.mission.discodeit.repository.jcf;
 
 import com.sprint.mission.discodeit.entity.ReadStatus;
 import com.sprint.mission.discodeit.repository.ReadStatusRepository;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-@Repository("jCFReadStatusRepository")
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "jcf", matchIfMissing = true)
+@Repository
 public class JCFReadStatusRepository implements ReadStatusRepository {
     private final Map<UUID, ReadStatus> data;
 
@@ -27,31 +28,22 @@ public class JCFReadStatusRepository implements ReadStatusRepository {
     }
 
     @Override
-    public List<UUID> findAllByChannelId(UUID channelId) {
-        return this.data.values().stream()
-                .filter(readStatus -> readStatus.getChannelId().equals(channelId))
-                .map(ReadStatus::getId)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<ReadStatus> findAllByUserId(UUID userId) {
         return this.data.values().stream()
                 .filter(readStatus -> readStatus.getUserId().equals(userId))
-                .collect(Collectors.toList());
+                .toList();
+    }
+
+    @Override
+    public List<ReadStatus> findAllByChannelId(UUID channelId) {
+        return this.data.values().stream()
+                .filter(readStatus -> readStatus.getChannelId().equals(channelId))
+                .toList();
     }
 
     @Override
     public boolean existsById(UUID id) {
         return this.data.containsKey(id);
-    }
-
-    @Override
-    public boolean existsByChannelIdAndUserId(UUID channelId, UUID userId) {
-        return this.data.values().stream()
-                .anyMatch(readStatus ->
-                        readStatus.getChannelId().equals(channelId) &&
-                                readStatus.getUserId().equals(userId));
     }
 
     @Override
@@ -61,6 +53,7 @@ public class JCFReadStatusRepository implements ReadStatusRepository {
 
     @Override
     public void deleteAllByChannelId(UUID channelId) {
-        this.data.values().removeIf(readStatus -> readStatus.getChannelId().equals(channelId));
+        this.findAllByChannelId(channelId)
+                .forEach(readStatus -> this.deleteById(readStatus.getId()));
     }
 }

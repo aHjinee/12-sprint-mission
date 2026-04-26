@@ -12,6 +12,7 @@ public class Channel implements Serializable {
     private UUID id;
     private Instant createdAt;
     private Instant updatedAt;
+    //
     private ChannelType type;
     private String name;
     private String description;
@@ -19,18 +20,10 @@ public class Channel implements Serializable {
     public Channel(ChannelType type, String name, String description) {
         this.id = UUID.randomUUID();
         this.createdAt = Instant.now();
-        this.updatedAt = Instant.now();
+        //
         this.type = type;
         this.name = name;
         this.description = description;
-    }
-
-    public static Channel createPublicChannel(ChannelType type, String name, String description) {
-        return new Channel(type, name, description);
-    }
-
-    public static Channel createPrivateChannel(ChannelType type) {
-        return new Channel(type, null, null);
     }
 
     public void update(String newName, String newDescription) {

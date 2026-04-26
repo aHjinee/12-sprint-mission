@@ -1,6 +1,5 @@
 package com.sprint.mission.discodeit.repository;
 
-import com.sprint.mission.discodeit.dto.user.UserResponseDto;
 import com.sprint.mission.discodeit.entity.User;
 
 import java.util.List;
@@ -14,7 +13,6 @@ public interface UserRepository {
     List<User> findAll();
     boolean existsById(UUID id);
     void deleteById(UUID id);
-
-    boolean existsByUsername(String username);
     boolean existsByEmail(String email);
+    boolean existsByUsername(String username);
 }
