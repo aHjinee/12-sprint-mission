@@ -1,14 +1,124 @@
 spring:
   application:
     name: discodeit
-
+  profiles:
+    active: dev   # dev, prod 선택 가능
   servlet:
     multipart:
+      maxFileSize: 10MB # 파일 하나의 최대 크기
+      maxRequestSize: 30MB  # 한 번에 최대 업로드 가능 용량
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/discodeit
+    username: discodeit_user
+    password: discodeit1234
+
+
+  # JPA
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      # create, create-drop, update, validate, none
+    show-sql: true
+    properties:
+      hibernate:
+        # default_batch_fetch_size: 100
+        format_sql: true
+        highlight_sql: true
+        use_sql_comments: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        physical_naming_strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+        jdbc.time_zone: UTC
+    open-in-view: false
+
+  # Spring Boot Admin Client 설정
+  boot:
+    admin:
+      client:
+        # Admin 서버 주소
+        #url: http://localhost:9090
+        instance:
+          name: discodeit
+          # 서비스 접근 URL (리버스 프록시 사용 시 정확한 외부 URL 지정)
+          service-url: http://localhost:8080
+          # actuator 베이스 URL
+          management-base-url: http://localhost:8080
+        enabled: true
+
+# swagger
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    display-request-duration: true
+    persist-authorization: true
+
+# log
+logging:
+  level:
+    root: info
+    # Hibernate SQL
+    org.hibernate.SQL: off
+    org.hibernate.orm.jdbc.bind: trace
+    org.hibernate.type.descriptor.sql: trace
+    # Spring Web
+    org.springframework.web: trace
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+
+  pattern:
+    console: "%d{HH:mm:ss} %-5level %logger{36} - %msg%n"
+
+
+# actuator/info 에 노출할 정보
+info:
+  app:
+    name: ${spring.application.name}
+    version: 1.7.0
+    java-version: 17
+    spring-boot-version: 3.4.0
+
+  datasource:
+    url: ${spring.datasource.url}
+    driver-class-name: ${spring.datasource.driver-class-name}
+
+  jpa:
+    ddl-auto: ${spring.jpa.hibernate.ddl-auto}
+
+  storage:
+    type: ${discodeit.storage.type}
+    path: ${discodeit.storage.local.root-path}
+
+  multipart:
+    max-file-size: ${spring.servlet.multipart.max-file-size}
+    max-request-size: ${spring.servlet.multipart.max-request-size}
+
+
+# Actuator 노출 범위
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,loggers
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  info:
+    env:
       enabled: true
-      max-file-size: 10MB
-      max-request-size: 10MB
+    java:
+      enabled: true
+    os:
+      enabled: true
+    build:
+      enabled: true
 
 discodeit:
-  repository:
-    type: file
-    file-directory: .discodeit
+  storage:
+    type: local
+    local:
+      root-path: .discodeit/storage
