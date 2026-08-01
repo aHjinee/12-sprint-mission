@@ -182,3 +182,5 @@ my_dir/
 .logs/
 .discodeit/storage/
 src/main/resources/fe_bundle_*.zip
+
+.env

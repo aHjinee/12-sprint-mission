@@ -1,32 +1,32 @@
 package com.sprint.mission.discodeit.exception;
 
-import lombok.Getter;
-
 import java.time.Instant;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
+
+import lombok.Getter;
 
 @Getter
 public class DiscodeitException extends RuntimeException {
+    private final Instant timestamp;
     private final ErrorCode errorCode;
     private final Map<String, Object> details;
-    private final Instant timestamp;
 
-    public DiscodeitException(ErrorCode errorCode){
+    public DiscodeitException(ErrorCode errorCode) {
         super(errorCode.getMessage());
         this.timestamp = Instant.now();
         this.errorCode = errorCode;
-        this.details = new LinkedHashMap<>();
+        this.details = new HashMap<>();
     }
 
-    public DiscodeitException(ErrorCode errorCode, Throwable cause){
+    public DiscodeitException(ErrorCode errorCode, Throwable cause) {
         super(errorCode.getMessage(), cause);
         this.timestamp = Instant.now();
         this.errorCode = errorCode;
-        this.details = new LinkedHashMap<>();
+        this.details = new HashMap<>();
     }
 
-    public void addDetail(String key, Object value){
-        this.getDetails().put(key, value);
+    public void addDetail(String key, Object value) {
+        this.details.put(key, value);
     }
-}
+} 

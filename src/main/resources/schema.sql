@@ -1,3 +1,13 @@
+DROP TABLE IF EXISTS read_statuses CASCADE;
+DROP TABLE IF EXISTS message_attachments CASCADE;
+DROP TABLE IF EXISTS messages CASCADE;
+DROP TABLE IF EXISTS channels CASCADE;
+DROP TABLE IF EXISTS user_statuses CASCADE;
+DROP TABLE IF EXISTS binary_contents CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+
+
+
 -- 테이블
 -- User
 CREATE TABLE users
@@ -8,7 +18,8 @@ CREATE TABLE users
     username   varchar(50) UNIQUE       NOT NULL,
     email      varchar(100) UNIQUE      NOT NULL,
     password   varchar(60)              NOT NULL,
-    profile_id uuid
+    profile_id uuid,
+    role varchar(20) NOT NULL
 );
 
 -- BinaryContent
